@@ -1,0 +1,160 @@
+<%- layout('./layouts/main.ejs') %>
+<link rel="stylesheet" href="../style/ventas.css">
+
+<div class="container-fluid ventaHead">
+    <h1>Ventas</h1>
+</div>
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-3">
+            <div class="form-floating search">
+                <input type="text" class="form-control rounded-pill" id="buscarVenta" placeholder="Buscar venta">
+                <label for="buscarVentaInput" class="label-buscar"><i class="fa-solid fa-magnifying-glass"></i> Buscar venta</label>
+            </div>            
+        </div>
+        <div class="col-3">
+            <button class="reporte-crear rounded-pill text-start" onclick="generarInformePDF()">
+                <p class="rounded-pill"><i class="fa-solid fa-download icon-generar-reporte"></i> Generar reporte de
+                    ventas</p>
+            </button>
+        </div>
+        <div class="col-3">
+            <button class="reporte-crear rounded-pill text-start"
+                onclick="window.location.href='/create-venta-servicio'">
+                <p class="rounded-pill">crear venta de servicio<i class="fa-solid fa-circle-plus fa-2xl"
+                        style="color: #ffffff; margin-left: 20% ;"></i></p>
+            </button>
+        </div>
+        <div class="col-3">
+            <button class="reporte-crear rounded-pill text-start"
+                onclick="window.location.href='/create-venta-pedido'">
+                <p class="rounded-pill">crear venta de pedido<i class="fa-solid fa-circle-plus fa-2xl"
+                        style="color: #ffffff; margin-left: 20% ;"></i></p>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <table class="table table-hover table-borderless mt-3 text-center table-sm">
+        <thead>
+            <tr class="table-secondary">
+                <th class="p-3">ID Venta</th>
+                <th class="p-3">Venta Pedido</th>
+                <th class="p-3">Venta Servicio</th>
+                <th class="p-3">Estado Venta</th>
+                <th class="p-3">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% let id = 1; %>
+            <% let idPedido = 1; %>
+            <% ventas.forEach(obj => { %>
+                <tr data-id="<%= obj._id %>">
+                    <td>
+                        <%= id %>
+                    </td>
+                    <td>
+                        <% if (obj.idPedido) { %>
+                            <%= idPedido %>
+                            <% idPedido++; %>
+                        <% } else { %>
+                            -
+                        <% } %>
+                    </td>
+                    <td>
+                        <%= obj.idCita %>
+                    </td>
+                    <td>
+                        <% let estado; %>
+                        <% if (obj.idPedido) { estado = obj.estadoVentaPedido || 'Pendiente' } else { estado = obj.estadoVentaServicio || 'Pendiente' } %>
+                        <%= estado %>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-between">
+                            <a href="/deleteVenta/<%= obj._id %>" onclick="return deleteCompra()"><i class="fa-solid fa-trash fa-xl" style="color: #929292;"></i></a>
+                            <div>
+                                <label class="switch">
+                                    <input type="checkbox" id="estadoActivo_<%= obj._id %>" name="estadoActivo" value="1" <%= obj.estadoVentaPedido || obj.estadoVentaServicio ? 'checked' : '' %>>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <% id++; %>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<div class="container-fluid container-paginado">
+    <div>
+        <div class="row">
+            <div class="col d-flex paginado">
+                <a href="">
+                    <i class="fa-solid fa-caret-left"></i>
+                </a>
+                <p>1</p>
+                <a href="">
+                    <i class="fa-solid fa-caret-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Manejar cambios en el interruptor
+        $('input[type="checkbox"]').change(function () {
+            const ventaId = $(this).closest('tr').data('id'); // Obtener el ID de la venta
+            const nuevoEstado = $(this).prop('checked') ? 1 : 0; // Nuevo estado (1 o 0)
+
+            // Enviar la solicitud POST al servidor
+            $.post('/updateEstadoVenta', { ventaId, nuevoEstado }, function (data) {
+                // Manejar la respuesta del servidor si es necesario
+                console.log(data);
+            });
+        });
+    });
+    
+    
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Manejar la búsqueda al presionar Enter
+        $('#buscarVenta').keyup(function (e) {
+            if (e.which === 13) { // 13 es el código de tecla para Enter
+                const terminoBusqueda = $(this).val().trim();
+                // Realizar la búsqueda en función del término de búsqueda
+                realizarBusqueda(terminoBusqueda);
+            }
+        });
+    });
+
+    // Función para realizar la búsqueda
+    function realizarBusqueda(termino) {
+        // Aquí puedes realizar una solicitud AJAX al servidor para buscar ventas en función del término
+        // y luego actualizar la lista de ventas en la página.
+        // Por ejemplo, podrías hacer una solicitud GET al servidor con el término de búsqueda como parámetro.
+
+        $.get(`/buscarVentas?termino=${termino}`, function (data) {
+            // Actualiza la lista de ventas en la página con los resultados de la búsqueda.
+            // Puedes usar JavaScript o jQuery para hacer esto.
+            // Por ejemplo, podrías reemplazar la tabla de ventas con la nueva lista de ventas.
+        });
+    }
+</script>
+
+<script>
+    function generarInformePDF() {
+        window.location.href = '/generar-informe-pdf';
+    }
+</script>
+
+
+
+

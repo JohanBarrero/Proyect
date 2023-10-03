@@ -1,0 +1,161 @@
+<%- layout('./layouts/main.ejs') %>
+<link rel="stylesheet" href="../style/compras.css">
+<script src="../js/validations.js"></script>
+<script></script>
+<div class="container-fluid" id="formRegistrarCompra" style="display: none;">
+    <div class="row create-tittle">
+        <div class="col-12">
+            <h1>Crear nueva compra</h1>
+        </div>
+    </div>
+    <div class="row form-agregar-compra">
+        <form action="/createComp" method="post" onsubmit="return validacionCompra();">
+            <div class="text-center row mt-4 fields">
+                <div class="col">
+                    <label for="dateCompra" class="form-label">Fecha compra</label><br>
+                    <input type="date" id="dateCompra" class="input-bonito" name="fechaCompra">
+                </div>
+                <div class="col">
+                    <label for="desc" class="form-label">Descripción</label><br>
+                    <input type="text" id="desc" class="input-bonito" name="desc">
+                </div>
+                <div class="col">
+                    <label for="totalCost" class="form-label">Factura</label><br>
+                    <input type="text" id="factu" class="input-bonito" name="factura">
+                </div>
+            </div>
+            <input type="text" name="cantidadDetalles" id="cantidadDetalles" value="1" style="display: none;">
+            <div id="detallesCompra">
+                <div class="text-center row mt-4 fields" id="formDetalleCompra">
+                    <div class="col">
+                        <label for="codigoDetalle" class="form-label">Detalle de compra</label><br>
+                        <input type="text" name="detalleCompra" class="input-bonito codigo-detalle-compra" value="1" id="codigoDetalle" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="proveedor" class="form-label">Proveedor</label><br>
+                        <select name="proveedor" id="proveedor" class="input-bonito rounded-pill">
+                            <option value="noSelect">Seleccione</option>
+                            <% proveedores.forEach(obj => { %>
+                                <option value="<%= obj.nombre %>"> <%= obj.nombre %> </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="prod" class="form-label ">Producto</label><br>
+                        <select id="prod" class="input-bonito rounded-pill" name="product">
+                            <option value="noSelect" selected> Seleccione</option>
+                            <% productos.forEach(obj => { %>
+                                <option value="<%= obj.nombre %>"> <%= obj.nombre %> </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="precio" class="form-label">Precio</label><br>
+                        <input type="text" name="precio" class="input-bonito" id="precio">
+                    </div>
+                    <div class="col">
+                        <label for="cantidad">Cantidad</label><br>
+                        <input type="text" name="cantidad" class="input-bonito" id="cantidad">
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center mt-5">
+                <div class="col text-end">
+                    <button type="button" class="boton-agregar-detalle-compra rounded-pill" onclick="AgregarDetalleCompra()">
+                      Agregar detalle
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                <div class="col text-start">
+                    <button type="button" class="cancel-btn" onclick="opcion('ocultar'), registrarCompra()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="acept-btn">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container-fluid compraHead" id="tituloCompra" style="display: block;">
+    <h1>Compras</h1>
+</div>
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-3">
+            <div class="form-floating search">
+                <input type="text" class="form-control rounded-pill" id="buscarCompra" placeholder="" oninput="return buscarCompra()">
+                <label for="floatingInputInvalid" class="label-buscar"><i class="fa-solid fa-magnifying-glass"></i>   Buscar compra</label>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-3">
+            <button class="reporte-crear rounded-pill text-start">
+              <p class="rounded-pill"><i class="fa-solid fa-download icon-generar-reporte"></i>  Generar reporte de las compras</p>
+            </button>        
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mt-3">
+            <button class="create-compra reporte-crear d-flex flex-row-reverse rounded-pill" type="button" onclick="opcion('mostrar'), registrarCompra()">
+                <div class="icono-mas">
+                  <i class="fa-solid fa-circle-plus icon-agregar-proveedor text-end"></i>
+                </div>
+                <div>
+                  <p>Registrar compra</p>
+                </div>
+              </button>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <table class="table table-hover table-borderless mt-3 text-center table-sm" id="tabla">
+        <thead>
+            <tr class="table-secondary">
+                <th class="p-3">Fecha Compra</th>
+                <th class="p-3">Descripción</th>
+                <th class="p-3">Factura</th>
+                <th class="p-3">Costoo total</th>
+                <th class="p-3">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% compras.forEach(obj => { %>
+            <tr>
+            <td><%= obj.fechaCompra %></td>
+            <td><%= obj.descrip %></td>
+            <td><%= obj.factura %></td>
+            <td><%= obj.costoTotalCompra %></td>
+            <td>
+                <div class="row">
+                    <div class="col text-center">
+                        <a href="">
+                            <i class="fa-solid fa-circle-xmark" style="color: #929292;"></i>
+                        </a>
+                    </div>
+                    <div class="col text-center">
+                        <a href="#" onclick="verDetallesCompra()">
+                            <i class="fa-solid fa-eye" style="color: #3cc3bd;"></i>
+                        </a>
+                    </div>
+                </div>
+            </td>
+            </tr>
+            <% }); %>
+
+        </tbody>
+    </table>
+</div>
+<div class="container-fluid container-paginado">
+    <div>
+        <div class="row">
+            <div class="col d-flex paginado">
+                <a href="">
+                    <i class="fa-solid fa-caret-left"></i>
+                </a>
+                <p>1</p>
+                <a href="">
+                    <i class="fa-solid fa-caret-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

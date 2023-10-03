@@ -1,0 +1,258 @@
+<%- layout('./layouts/main.ejs') %>
+    <link rel="stylesheet" href="../style/ventas.css">
+    <script src="../js/validations.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <div class="container-fluid">
+        <div class="create-tittle container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Crear venta pedido</h1>
+                </div>
+            </div>
+        </div>
+
+
+
+        <% let idVenta; %>
+            <% if (venta) { %>
+                <% idVenta=venta.idVenta + 1; %>
+                    <% } else { %>
+                        <% idVenta=1; %>
+                            <% }; %>
+                                <script>
+                                    let servicesAdded =  []
+                                    function valueInputCliente(sel) {
+                                        let nombreCliente = document.getElementById("nombreCliente");
+                                        if (sel.value == 1) {
+                                            nombreCliente.value = "Juan";
+                                        } else if (sel.value == 2) {
+                                            nombreCliente.value = "Diego";
+                                        } else if (sel.value == 3) {
+                                            nombreCliente.value = "Johan";
+                                        } else if (sel.value == 4) {
+                                            nombreCliente = "Santiago";
+                                        }
+                                    }
+
+                                    function valueInputServicio(sel) {
+                                        let nombreProducto = document.getElementById("nombreProducto");
+                                        let precioUnitario = document.getElementById("precioUnitario");
+                                        if (sel.value == 1) {
+                                            precioUnitario.value = 22900;
+                                        } else if (sel.value == 2) {
+                                            precioUnitario.value = 14000;
+                                        } else if (sel.value == 3) {
+                                            precioUnitario.value = 5500;                                            duracionServicio.value = 120;
+                                        } else if (sel.value == 4) {
+                                            duracionServicio.value = 19500;
+                                        }
+                                    }
+                                    
+                                  
+
+                                    
+
+                                </script>
+
+
+                                <div class="create-body">
+
+                                    <form action="/createVentaPed " method="post"
+                                        onsubmit="return validarVentaPedido();">
+                                        <div class="container-fluid">
+                                            <div class="text-center row mt-4 fields">
+                                                <div class="col">
+                                                    <label for="idVenta" class="form-label">ID Pedido</label><br>
+                                                    <input type="text" class="input-bonito" id="idPedido" name="idPedido"
+                                                        value="<%= idVenta %>" readonly>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="metodoPago" class="form-label ">Metodo de
+                                                        Pago</label><br>
+                                                    <select id="metodoPago" class="form-select" name="metodoPago"
+                                                        onchange="valueInputEmpleado(this)">
+                                                        <option value="noSelect" selected disabled>Metodo...</option>
+                                                        <option value="1">1. Transferencia</option>
+                                                        <option value="2">2. Efectivo</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="nombreProducto" class="form-label ">Seleccione el
+                                                        Producto</label><br>
+                                                    <select id="nombreProducto" class="form-select" name="nombreProducto"
+                                                        onchange="valueInputServicio(this)">
+                                                        <option value="noSelect" selected disabled>Producto...</option>
+                                                        <option value="1">1. Shampoo EGO</option>
+                                                        <option value="2">2. Keratina SuperHit</option>
+                                                        <option value="3">3. Maquillaje Evon</option>
+                                                        <option value="4">4. Acondicionador Dove</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="estadoPedido" class="form-label ">Estado Pedido</label><br>
+                                                    <select id="estadoPedido" class="form-select" name="estadoPedido">
+                                                        <option value="noSelect" selected disabled>Estado...</option>
+                                                        <option value="1">Por entregar</option>
+                                                        <option value="2">Entregado</option>
+                                                        <option value="3">Cancelado</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="text-center row mt-4 fields">
+                                                <div class="col">
+                                                    <label for="fechaPedido" class="form-label">Fecha Pedido</label><br>
+                                                    <input type="date" id="fechaPedido" class="input-bonito"
+                                                        name="fechaPedido">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="fechaVentaPedido" class="form-label">Fecha Venta Pedido</label><br>
+                                                    <input type="date" id="fechaVentaPedido" class="input-bonito"
+                                                        name="fechaVentaPedido">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="precioTotalPedido" class="form-label">Precio
+                                                        Total Pedido</label><br>
+                                                    <input type="text" id="precioTotalPedido" class="input-bonito"
+                                                        name="precioTotalPedido">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="cantidadProducto" class="form-label">Cantidad
+                                                        Producto</label><br>
+                                                    <input type="number" id="cantidadProducto" class="input-bonito" value=""
+                                                        name="cantidadProducto">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="precioUnitario" class="form-label">Precio
+                                                        Unitario</label><br>
+                                                    <input type="text" id="precioUnitario" class="input-bonito" value=""
+                                                        name="precioUnitario">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        ...
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary">Save
+                                                            changes</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            function openModalAddServices() {
+                                                alert('Ome');
+                                                $('#exampleModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var recipient = button.data('whatever') // Extract info from data-* attributes
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this)
+  modal.find('.modal-title').text('New message to ' + recipient)
+  modal.find('.modal-body input').val(recipient)
+})
+                                            }
+                                            function agregarServicio() {
+                                                let fields = "";
+
+                                                let divServicio = document.getElementById("addServicio");
+
+                                                fields = '<div class="row text-center mt-4 fields">' +
+                                                    '<div class="col">' +
+                                                    '<label for="IDEmpleado" class="form-label ">Seleccione el Empleado</label><br>' +
+                                                    '<select id="IDEmpleado" class="form-select" name="IDEmpleado" onchange="valueInputEmpleado(this)">' +
+                                                    '<option value="noSelect" selected disabled>Empleado...</option>' +
+                                                    '<option value="1">1. Juan</option>' +
+                                                    '<option value="2">2. Diego</option>' +
+                                                    '<option value="3">3. Johan</option>' +
+                                                    '<option value="4">4. Santiago</option>' +
+                                                    '</select>' +
+                                                    '</div>' +
+                                                    '<div class="col">' +
+                                                    '<label for="client" class="form-label ">Seleccione el Servicio</label><br>' +
+                                                    '<select id="client" class="form-select" name="client" onchange="valueInputServicio(this)">' +
+                                                    '<option value="noSelect" selected disabled>Servicio...</option>' +
+                                                    '<option value="1">1. Corte de cabello</option>' +
+                                                    '<option value="2">2. Uñas acrílicas</option>' +
+                                                    '<option value="3">3. Tinturado</option>' +
+                                                    '<option value="4">4. Alizado</option>' +
+                                                    '</select>' +
+                                                    '</div>' +
+                                                    '<div class="col">' +
+                                                    '<label for="duracionServicio" class="form-label">Duración Servicio</label><br>' +
+                                                    '<input type="text" class="input-bonito" id="duracionServicio" name="duracionServicio" readonly>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '<div class="row text-center mt-4 fields">' +
+                                                    '<div class="col">' +
+                                                    '<label for="nombreEmpleado" class="form-label">Nombre empleado</label><br>' +
+                                                    '<input type="text" id="nombreEmpleado" class="input-bonito" value="" name="nombreEmpleado" readonly>' +
+                                                    '</div>' +
+                                                    '<div class="col">' +
+                                                    '<label for="nombreServicio" class="form-label">Nombre servicio</label><br>' +
+                                                    '<input type="text" id="nombreServicio" class="input-bonito" value="" name="nombreServicio" readonly>' +
+                                                    '</div>' +
+                                                    '<div class="col">' +
+                                                    '<label for="precioServicio" class="form-label">Precio servicio</label><br>' +
+                                                    '<input type="text" id="precioServicio" class="input-bonito" name="precioServicio">' +
+                                                    '</div>' +
+                                                    '</div>';
+
+                                                divServicio.innerHTML = fields;
+                                            }
+                                        </script>
+                                        <div class="container-fluid">
+                                            <div class="row justify-content-center mt-5">
+                                                <div class="col text-end">
+                                                    <button type="button" class="cancel-btn" onclick="backPage();">
+                                                        Cancelar
+                                                    </button>
+                                                </div>
+                                                <div class="col text-start">
+                                                    <button type="submit" class="acept-btn">
+                                                        Aceptar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+    </div>
+    <script>
+        function actualizarPrecioTotal() {
+          // Obtiene los valores de precio unitario y cantidad
+          const precioUnitario = parseFloat(document.getElementById("precioUnitario").value);
+          const cantidad = parseFloat(document.getElementById("cantidadProducto").value);
+      
+          // Verifica si ambos valores son válidos
+          if (!isNaN(precioUnitario) && !isNaN(cantidad)) {
+            // Calcula el precio total
+            const precioTotal = precioUnitario * cantidad;
+      
+            // Actualiza el campo de Precio Total Pedido
+            document.getElementById("precioTotalPedido").value = precioTotal.toFixed(2); // Ajusta la cantidad de decimales según tu preferencia
+          } else {
+            // Si alguno de los valores no es válido, muestra un mensaje de error o realiza la acción que desees
+            document.getElementById("precioTotalPedido").value = "";
+          }
+        }
+      
+        // Agrega un evento "change" al elemento de selección de producto y un evento "input" al campo de cantidad
+        document.getElementById("nombreProducto").addEventListener("change", actualizarPrecioTotal);
+        document.getElementById("cantidadProducto").addEventListener("input", actualizarPrecioTotal);
+      </script>
+      
